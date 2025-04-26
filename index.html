@@ -4,111 +4,124 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tarjeta Especial</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Roboto', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background-color: #ffe6e6;
+      background: linear-gradient(135deg, #ffd6e0, #ffe6f0);
       padding: 20px;
     }
 
     .card {
-      background-color: #fff;
-      border-radius: 10px;
-      padding: 25px 15px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      background: white;
+      border-radius: 20px;
+      padding: 30px 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
       text-align: center;
       width: 100%;
-      max-width: 380px;
-      transition: all 0.5s ease;
+      max-width: 400px;
+      animation: fadeIn 1s ease forwards;
+      transform: scale(0.95);
+      opacity: 0;
+    }
+
+    .card.show {
+      transform: scale(1);
+      opacity: 1;
     }
 
     .hidden {
       display: none;
     }
 
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 28px;
+      color: #ff4d6d;
+      margin-bottom: 25px;
+    }
+
     button {
-      background-color: #ff4d6d;
+      background: #ff4d6d;
       border: none;
-      padding: 20px 15px; /* Más espacio para tocar */
+      padding: 14px 20px;
       margin: 10px 5px;
-      border-radius: 8px;
+      border-radius: 12px;
       color: white;
-      font-size: 20px; /* Aumentar tamaño de fuente */
+      font-size: 18px;
+      font-weight: bold;
       cursor: pointer;
-      width: 100px;
+      transition: transform 0.2s ease, background 0.3s ease;
     }
 
     button:hover {
-      background-color: #ff3366;
+      background: #ff3366;
+      transform: scale(1.05);
     }
 
-    h1 {
-      color: #ff4d6d;
-      font-size: 22px;
+    button:active {
+      transform: scale(0.95);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 400px) {
       h1 {
-        font-size: 20px;
+        font-size: 22px;
       }
 
       button {
         font-size: 16px;
-        width: 90px;
+        padding: 12px 18px;
       }
     }
   </style>
 </head>
 <body>
 
-<div id="start-card" class="card">
-  <h1>💌 Click para abrir 💌</h1>
+<div id="start-card" class="card show">
+  <h1>💌 Toca para abrir 💌</h1>
   <button id="openButton">Abrir</button>
 </div>
 
 <div id="love-card" class="card hidden">
-  <h1>¿Te gustaría salir conmigo? 🥰</h1>
-  <button id="yesButton">Sí</button>
-  <button id="noButton">No</button>
+  <h1>¿Quieres salir conmigo? 🥰</h1>
+  <button id="yesButton">Sí ❤️</button>
+  <button id="noButton">No 😢</button>
 </div>
 
 <script>
+  const startCard = document.getElementById('start-card');
+  const loveCard = document.getElementById('love-card');
   const openButton = document.getElementById('openButton');
   const yesButton = document.getElementById('yesButton');
   const noButton = document.getElementById('noButton');
 
-  // Agregar eventos touchstart para mejorar la compatibilidad con dispositivos móviles
-  openButton.addEventListener('touchstart', () => {
-    document.getElementById('start-card').classList.add('hidden');
-    document.getElementById('love-card').classList.remove('hidden');
-  });
+  function showLoveCard() {
+    startCard.classList.add('hidden');
+    loveCard.classList.remove('hidden');
+    setTimeout(() => loveCard.classList.add('show'), 50);
+  }
 
-  yesButton.addEventListener('touchstart', () => {
-    alert('¡Yuju! 😍');
-  });
+  openButton.addEventListener('click', showLoveCard);
+  openButton.addEventListener('touchstart', showLoveCard);
 
-  noButton.addEventListener('touchstart', () => {
-    alert('😢 Aún así te deseo un hermoso día.');
-  });
-
-  // Eventos click para compatibilidad con desktop
-  openButton.onclick = () => {
-    document.getElementById('start-card').classList.add('hidden');
-    document.getElementById('love-card').classList.remove('hidden');
-  };
-
-  yesButton.onclick = () => {
-    alert('¡Yuju! 😍');
-  };
-
-  noButton.onclick = () => {
-    alert('😢 Aún así te deseo un hermoso día.');
-  };
+  yesButton.onclick = () => alert('¡Yuju! 🥳 ¡Me hiciste el día!');
+  noButton.onclick = () => alert('😢 Está bien, igual te deseo muchas sonrisas.');
+  yesButton.addEventListener('touchstart', () => alert('¡Yuju! 🥳 ¡Me hiciste el día!'));
+  noButton.addEventListener('touchstart', () => alert('😢 Está bien, igual te deseo muchas sonrisas.'));
 </script>
 
 </body>
