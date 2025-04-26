@@ -4,200 +4,176 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tarjeta Especial</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      background: linear-gradient(270deg, #ffe6e6, #ffc2d1, #ffd6e0, #ffe6e6);
+      background-size: 800% 800%;
+      animation: gradientMove 20s ease infinite;
       overflow: hidden;
-      background: linear-gradient(135deg, #ffd6e0, #ffe6f0);
       padding: 20px;
       position: relative;
     }
 
-    #hearts {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      pointer-events: none;
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .card {
-      position: relative;
-      background: white;
-      border-radius: 20px;
-      padding: 30px 20px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 25px 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       text-align: center;
       width: 100%;
-      max-width: 400px;
+      max-width: 380px;
       transition: all 0.5s ease;
-      transform: scale(0.9);
       opacity: 0;
-      z-index: 1;
+      transform: scale(0.8);
+      animation: fadeIn 1s forwards;
+      z-index: 2; /* Encima de los corazones */
     }
 
-    .card.show {
-      opacity: 1;
-      transform: scale(1);
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
     .hidden {
-      opacity: 0;
-      visibility: hidden;
-      transform: scale(0.8);
-    }
-
-    h1 {
-      font-family: 'Pacifico', cursive;
-      font-size: 28px;
-      color: #ff4d6d;
-      margin-bottom: 25px;
+      display: none;
     }
 
     button {
-      background: linear-gradient(45deg, #ff4d6d, #ff85a2);
+      background-color: #ff4d6d;
       border: none;
-      padding: 14px 20px;
+      padding: 20px 15px;
       margin: 10px 5px;
-      border-radius: 12px;
+      border-radius: 8px;
       color: white;
-      font-size: 18px;
-      font-weight: bold;
+      font-size: 20px;
       cursor: pointer;
-      transition: transform 0.2s ease, background 0.3s ease;
+      width: 100px;
+      transition: transform 0.3s ease;
     }
 
     button:hover {
-      background: linear-gradient(45deg, #ff3366, #ff6699);
-      transform: scale(1.05);
+      background-color: #ff3366;
+      animation: heartbeat 1s infinite;
     }
 
-    button:active {
-      transform: scale(0.95);
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .shake {
+      animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+
+    h1 {
+      color: #ff4d6d;
+      font-size: 22px;
     }
 
     @media (max-width: 400px) {
-      h1 {
-        font-size: 22px;
-      }
+      h1 { font-size: 20px; }
+      button { font-size: 16px; width: 90px; }
+    }
 
-      button {
-        font-size: 16px;
-        padding: 12px 18px;
+    /* Animaciones de corazones */
+    .heart {
+      position: absolute;
+      color: #ff4d6d;
+      font-size: 30px;
+      opacity: 0.7;
+      animation: floatUp 8s infinite ease-in-out;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) scale(0.8);
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-10vh) scale(1.2);
+        opacity: 0;
       }
     }
   </style>
 </head>
 <body>
 
-<canvas id="hearts"></canvas>
+<!-- Corazones flotando -->
+<div class="heart" style="left:10%; animation-delay: 0s;">❤️</div>
+<div class="heart" style="left:30%; animation-delay: 2s;">💖</div>
+<div class="heart" style="left:50%; animation-delay: 4s;">💘</div>
+<div class="heart" style="left:70%; animation-delay: 1s;">💕</div>
+<div class="heart" style="left:90%; animation-delay: 3s;">💝</div>
 
-<div id="start-card" class="card show">
-  <h1>💌 Toca para abrir 💌</h1>
+<div id="start-card" class="card">
+  <h1>💌 Click para abrir 💌</h1>
   <button id="openButton">Abrir</button>
 </div>
 
 <div id="love-card" class="card hidden">
-  <h1>¿Quieres salir conmigo? 🥰</h1>
-  <button id="yesButton">Sí ❤️</button>
-  <button id="noButton">No 😢</button>
+  <h1>¿Te gustaría salir conmigo? 🥰</h1>
+  <button id="yesButton">Sí</button>
+  <button id="noButton">No</button>
 </div>
 
-<audio id="happySound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5b3fce3a3e.mp3?filename=success-1-6297.mp3"></audio>
-<audio id="sadSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_b2e92754d7.mp3?filename=failure-2-7184.mp3"></audio>
-
 <script>
-  const startCard = document.getElementById('start-card');
-  const loveCard = document.getElementById('love-card');
   const openButton = document.getElementById('openButton');
   const yesButton = document.getElementById('yesButton');
   const noButton = document.getElementById('noButton');
-  const happySound = document.getElementById('happySound');
-  const sadSound = document.getElementById('sadSound');
+  const loveCard = document.getElementById('love-card');
 
   function showLoveCard() {
-    startCard.classList.add('hidden');
-    setTimeout(() => {
-      startCard.classList.remove('show');
-      loveCard.classList.remove('hidden');
-      setTimeout(() => loveCard.classList.add('show'), 50);
-    }, 300);
+    document.getElementById('start-card').classList.add('hidden');
+    loveCard.classList.remove('hidden');
+    loveCard.style.animation = 'fadeIn 1s forwards';
   }
 
-  openButton.addEventListener('click', showLoveCard);
   openButton.addEventListener('touchstart', showLoveCard);
-
-  yesButton.onclick = () => {
-    happySound.play();
-    setTimeout(() => alert('¡Yuju! 🥳 ¡Me hiciste el día!'), 300);
-  };
-  
-  noButton.onclick = () => {
-    sadSound.play();
-    setTimeout(() => alert('😢 Está bien, igual te deseo un lindo día.'), 300);
-  };
+  openButton.onclick = showLoveCard;
 
   yesButton.addEventListener('touchstart', () => {
-    happySound.play();
-    setTimeout(() => alert('¡Yuju! 🥳 ¡Me hiciste el día!'), 300);
+    alert('¡Yuju! 😍');
   });
+  yesButton.onclick = () => {
+    alert('¡Yuju! 😍');
+  };
 
   noButton.addEventListener('touchstart', () => {
-    sadSound.play();
-    setTimeout(() => alert('😢 Está bien, igual te deseo un lindo día.'), 300);
+    loveCard.classList.add('shake');
+    setTimeout(() => loveCard.classList.remove('shake'), 500);
+    alert('😢 Aún así te deseo un hermoso día.');
   });
-
-  const canvas = document.getElementById('hearts');
-  const ctx = canvas.getContext('2d');
-  let hearts = [];
-
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-
-  for (let i = 0; i < 50; i++) {
-    hearts.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      size: Math.random() * 6 + 4,
-      speed: Math.random() * 1 + 0.5
-    });
-  }
-
-  function drawHearts() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'rgba(255, 192, 203, 0.6)';
-    hearts.forEach(h => {
-      ctx.beginPath();
-      ctx.arc(h.x, h.y, h.size, 0, Math.PI * 2);
-      ctx.fill();
-      h.y -= h.speed;
-      if (h.y < 0) {
-        h.y = canvas.height;
-        h.x = Math.random() * canvas.width;
-      }
-    });
-    requestAnimationFrame(drawHearts);
-  }
-
-  drawHearts();
+  noButton.onclick = () => {
+    loveCard.classList.add('shake');
+    setTimeout(() => loveCard.classList.remove('shake'), 500);
+    alert('😢 Aún así te deseo un lindo día.');
+  };
 </script>
-
-</body>
-</html>
 
 </body>
 </html>
