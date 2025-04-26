@@ -17,11 +17,22 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      overflow: hidden;
       background: linear-gradient(135deg, #ffd6e0, #ffe6f0);
       padding: 20px;
+      position: relative;
+    }
+
+    #hearts {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
     }
 
     .card {
+      position: relative;
       background: white;
       border-radius: 20px;
       padding: 30px 20px;
@@ -29,18 +40,21 @@
       text-align: center;
       width: 100%;
       max-width: 400px;
-      animation: fadeIn 1s ease forwards;
-      transform: scale(0.95);
+      transition: all 0.5s ease;
+      transform: scale(0.9);
       opacity: 0;
+      z-index: 1;
     }
 
     .card.show {
-      transform: scale(1);
       opacity: 1;
+      transform: scale(1);
     }
 
     .hidden {
-      display: none;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.8);
     }
 
     h1 {
@@ -51,7 +65,7 @@
     }
 
     button {
-      background: #ff4d6d;
+      background: linear-gradient(45deg, #ff4d6d, #ff85a2);
       border: none;
       padding: 14px 20px;
       margin: 10px 5px;
@@ -64,17 +78,12 @@
     }
 
     button:hover {
-      background: #ff3366;
+      background: linear-gradient(45deg, #ff3366, #ff6699);
       transform: scale(1.05);
     }
 
     button:active {
       transform: scale(0.95);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 400px) {
@@ -91,6 +100,8 @@
 </head>
 <body>
 
+<canvas id="hearts"></canvas>
+
 <div id="start-card" class="card show">
   <h1>💌 Toca para abrir 💌</h1>
   <button id="openButton">Abrir</button>
@@ -102,26 +113,87 @@
   <button id="noButton">No 😢</button>
 </div>
 
+<audio id="happySound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5b3fce3a3e.mp3?filename=success-1-6297.mp3"></audio>
+<audio id="sadSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_b2e92754d7.mp3?filename=failure-2-7184.mp3"></audio>
+
 <script>
   const startCard = document.getElementById('start-card');
   const loveCard = document.getElementById('love-card');
   const openButton = document.getElementById('openButton');
   const yesButton = document.getElementById('yesButton');
   const noButton = document.getElementById('noButton');
+  const happySound = document.getElementById('happySound');
+  const sadSound = document.getElementById('sadSound');
 
   function showLoveCard() {
     startCard.classList.add('hidden');
-    loveCard.classList.remove('hidden');
-    setTimeout(() => loveCard.classList.add('show'), 50);
+    setTimeout(() => {
+      startCard.classList.remove('show');
+      loveCard.classList.remove('hidden');
+      setTimeout(() => loveCard.classList.add('show'), 50);
+    }, 300);
   }
 
   openButton.addEventListener('click', showLoveCard);
   openButton.addEventListener('touchstart', showLoveCard);
 
-  yesButton.onclick = () => alert('¡Yuju! 🥳 ¡Me hiciste el día!');
-  noButton.onclick = () => alert('😢 Está bien, igual te deseo muchas sonrisas.');
-  yesButton.addEventListener('touchstart', () => alert('¡Yuju! 🥳 ¡Me hiciste el día!'));
-  noButton.addEventListener('touchstart', () => alert('😢 Está bien, igual te deseo muchas sonrisas.'));
+  yesButton.onclick = () => {
+    happySound.play();
+    setTimeout(() => alert('¡Yuju! 🥳 ¡Me hiciste el día!'), 300);
+  };
+  
+  noButton.onclick = () => {
+    sadSound.play();
+    setTimeout(() => alert('😢 Está bien, igual te deseo muchas sonrisas.'), 300);
+  };
+
+  yesButton.addEventListener('touchstart', () => {
+    happySound.play();
+    setTimeout(() => alert('¡Yuju! 🥳 ¡Me hiciste el día!'), 300);
+  });
+
+  noButton.addEventListener('touchstart', () => {
+    sadSound.play();
+    setTimeout(() => alert('😢 Está bien, igual te deseo un lindo día.'), 300);
+  });
+
+  const canvas = document.getElementById('hearts');
+  const ctx = canvas.getContext('2d');
+  let hearts = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  for (let i = 0; i < 50; i++) {
+    hearts.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 6 + 4,
+      speed: Math.random() * 1 + 0.5
+    });
+  }
+
+  function drawHearts() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(255, 192, 203, 0.6)';
+    hearts.forEach(h => {
+      ctx.beginPath();
+      ctx.arc(h.x, h.y, h.size, 0, Math.PI * 2);
+      ctx.fill();
+      h.y -= h.speed;
+      if (h.y < 0) {
+        h.y = canvas.height;
+        h.x = Math.random() * canvas.width;
+      }
+    });
+    requestAnimationFrame(drawHearts);
+  }
+
+  drawHearts();
 </script>
 
 </body>
